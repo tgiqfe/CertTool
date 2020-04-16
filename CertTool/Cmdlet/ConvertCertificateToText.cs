@@ -28,15 +28,6 @@ namespace CertTool.Cmdlet
             //  カレントディレクトリカレントディレクトリの一時変更
             _currentDirectory = Environment.CurrentDirectory;
             Environment.CurrentDirectory = this.SessionState.Path.CurrentFileSystemLocation.Path;
-
-            /*
-            Item.OpenSSLPath = new OpensslPath(Item.TOOLS_DIRECTORY);
-            Function.ExpandEmbeddedResource(Item.OpenSSLPath.Base);
-            if (!Directory.Exists(Item.OpenSSLPath.Dir))
-            {
-                Function.ExtractZipFile(Item.OpenSSLPath.Zip, Item.OpenSSLPath.Dir);
-            }
-            */
         }
 
         protected override void ProcessRecord()
@@ -49,8 +40,6 @@ namespace CertTool.Cmdlet
                 sw.Write(config.GetIni());
             }
             string text = command.ConvertToText(SourcePath, Csr, Crt, Key);
-
-            //string text = OpensslCommand.ConvertToText(SourcePath, Csr, Crt, Key);
 
             WriteObject(text);
         }

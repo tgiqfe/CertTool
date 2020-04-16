@@ -27,40 +27,11 @@ namespace CertTool.Cmdlet
             //  カレントディレクトリカレントディレクトリの一時変更
             _currentDirectory = Environment.CurrentDirectory;
             Environment.CurrentDirectory = this.SessionState.Path.CurrentFileSystemLocation.Path;
-
-            /*
-            Item.OpenSSLPath = new OpensslPath(Item.TOOLS_DIRECTORY);
-            Function.ExpandEmbeddedResource(Item.OpenSSLPath.Base);
-            if (!Directory.Exists(Item.OpenSSLPath.Dir))
-            {
-                Function.ExtractZipFile(Item.OpenSSLPath.Zip, Item.OpenSSLPath.Dir);
-            }
-            */
         }
 
         protected override void ProcessRecord()
         {
             OpensslFunction.RevokeCertificate(CrtFile, CACrtFile, CAKeyFile);
-
-            /*
-            OpensslConfig config = new OpensslConfig();
-
-            config.Default.RANDFILE = Item.OpenSSLPath.Rnd.Replace("\\", "/");
-            config.CA_default.dir = Item.OpenSSLPath.Dir.Replace("\\", "/");
-            config.CA_default.database = Item.OpenSSLPath.Db.Replace("\\", "/");
-            config.CA_default.serial = Item.OpenSSLPath.Serial.Replace("\\", "/");
-
-            using (StreamWriter sw = new StreamWriter(Item.OpenSSLPath.Cnf, false, new UTF8Encoding(false)))
-            {
-                sw.Write(config.GetIni());
-            }
-
-            //  ランダムファイル「.rnd」作成
-            OpensslCommand.CreateRnadomFile();
-
-            //  CSRに署名して証明書を発行
-            OpensslCommand.RevokeCertificate(CrtFile, CACrtFile, CAKeyFile);
-            */
         }
 
         protected override void EndProcessing()
