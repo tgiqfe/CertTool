@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace CertTool.OpenSSL
 {
-    class OpensslFunction
+    public class OpensslFunction
     {
         /// <summary>
         /// ルートCA用証明書/鍵ファイルを作成

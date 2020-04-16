@@ -10,7 +10,7 @@ using System.IO.Compression;
 
 namespace CertTool.OpenSSL
 {
-    class OpensslCommand
+    public class OpensslCommand
     {
         private OpensslPath _opensslPath = null;
 

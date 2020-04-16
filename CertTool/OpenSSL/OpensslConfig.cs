@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace CertTool.OpenSSL
 {
-    class OpensslConfig
+    public class OpensslConfig
     {
         public class Section_Default : OpensslConfigBase
         {

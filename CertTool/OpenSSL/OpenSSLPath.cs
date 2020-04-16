@@ -7,7 +7,7 @@ using System.IO;
 
 namespace CertTool.OpenSSL
 {
-    class OpensslPath
+    public class OpensslPath
     {
         private string _Base = null;
         private string _Zip = null;

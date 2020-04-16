@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace CertTool.OpenSSL
 {
-    class OpensslConfigBase
+    public class OpensslConfigBase
     {
         /// <summary>
         /// 対象クラス(セクション単位)の名前(セクション名)
