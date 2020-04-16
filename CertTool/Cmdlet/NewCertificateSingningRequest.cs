@@ -15,13 +15,13 @@ namespace CertTool.Cmdlet
     public class NewCertificateSingningRequest : PSCmdlet
     {
         [Parameter]
-        public string Subject { get; set; }
-        [Parameter]
-        public string[] AlternateNames { get; set; }
-        [Parameter]
         public string CsrFile { get; set; } = "server.csr";
         [Parameter]
         public string KeyFile { get; set; } = "server.key";
+        [Parameter]
+        public string Subject { get; set; }
+        [Parameter]
+        public string[] AlternateNames { get; set; }
         [Parameter]
         public int RsaBits { get; set; } = 4096;
 
@@ -33,16 +33,21 @@ namespace CertTool.Cmdlet
             _currentDirectory = Environment.CurrentDirectory;
             Environment.CurrentDirectory = this.SessionState.Path.CurrentFileSystemLocation.Path;
 
+            /*
             Item.OpenSSLPath = new OpensslPath(Item.TOOLS_DIRECTORY);
             Function.ExpandEmbeddedResource(Item.OpenSSLPath.Base);
             if (!Directory.Exists(Item.OpenSSLPath.Dir))
             {
                 Function.ExtractZipFile(Item.OpenSSLPath.Zip, Item.OpenSSLPath.Dir);
             }
+            */
         }
 
         protected override void ProcessRecord()
         {
+            OpensslFunction.CreateCSR(CsrFile, KeyFile, Subject, AlternateNames, RsaBits);
+
+            /*
             OpensslConfig config = new OpensslConfig();
 
             config.Default.RANDFILE = Item.OpenSSLPath.Rnd.Replace("\\", "/");
@@ -96,6 +101,7 @@ namespace CertTool.Cmdlet
 
             //  CSRファイルを作成
             OpensslCommand.CreateCSRFile(CsrFile, KeyFile, Subject);
+            */
         }
 
         protected override void EndProcessing()

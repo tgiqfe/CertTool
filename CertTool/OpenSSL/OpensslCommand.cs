@@ -6,20 +6,36 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Diagnostics;
 using System.Reflection;
+using System.IO.Compression;
 
 namespace CertTool.OpenSSL
 {
     class OpensslCommand
     {
+        private OpensslPath _opensslPath = null;
+
+        public OpensslCommand() { }
+        public OpensslCommand(OpensslPath opensslPath)
+        {
+            this._opensslPath = opensslPath;
+
+            //  埋め込みリソースを展開
+            Function.ExpandEmbeddedResource(_opensslPath.Base);
+            if (!Directory.Exists(_opensslPath.Dir))
+            {
+                ZipFile.ExtractToDirectory(_opensslPath.Zip, opensslPath.Dir);
+            }
+        }
+
         /// <summary>
         /// OpenSSLコマンドを実行する為のプライベートメソッド
         /// </summary>
         /// <param name="arguments"></param>
-        private static void Run(string arguments)
+        private void Run(string arguments)
         {
             using (Process proc = new Process())
             {
-                proc.StartInfo.FileName = Item.OpenSSLPath.Exe;
+                proc.StartInfo.FileName = _opensslPath.Exe;
                 proc.StartInfo.Arguments = arguments;
                 proc.StartInfo.UseShellExecute = false;
                 proc.StartInfo.CreateNoWindow = true;
@@ -40,11 +56,11 @@ namespace CertTool.OpenSSL
         /// </summary>
         /// <param name="arguments"></param>
         /// <param name="sb"></param>
-        private static void Run(string arguments, StringBuilder sb)
+        private void Run(string arguments, StringBuilder sb)
         {
             using (Process proc = new Process())
             {
-                proc.StartInfo.FileName = Item.OpenSSLPath.Exe;
+                proc.StartInfo.FileName = _opensslPath.Exe;
                 proc.StartInfo.Arguments = arguments;
                 proc.StartInfo.UseShellExecute = false;
                 proc.StartInfo.CreateNoWindow = true;
@@ -63,7 +79,7 @@ namespace CertTool.OpenSSL
         /// <summary>
         /// Opensslのバージョンを表示
         /// </summary>
-        public static void GetVersion()
+        public void GetVersion()
         {
             Run("version");
         }
@@ -71,9 +87,9 @@ namespace CertTool.OpenSSL
         /// <summary>
         /// ランダムファイル「.rnd」を作成するコマンドを実行
         /// </summary>
-        public static void CreateRnadomFile()
+        public void CreateRandomFile()
         {
-            if (File.Exists(Item.OpenSSLPath.Rnd))
+            if (File.Exists(_opensslPath.Rnd))
             {
                 return;
             }
@@ -81,7 +97,7 @@ namespace CertTool.OpenSSL
 
             Run(string.Format(
                 "rand -out \"{0}\" -rand \"{1}\" 1024",
-                Item.OpenSSLPath.Rnd,
+                _opensslPath.Rnd,
                 assemblyPath
                 ));
         }
@@ -91,7 +107,7 @@ namespace CertTool.OpenSSL
         /// </summary>
         /// <param name="keyFile"></param>
         /// <param name="rsaBits"></param>
-        public static void CreateKeyFile(string keyFile, int rsaBits)
+        public void CreateKeyFile(string keyFile, int rsaBits)
         {
             Run(string.Format(
                 "genrsa -out \"{0}\" {1}",
@@ -106,11 +122,11 @@ namespace CertTool.OpenSSL
         /// <param name="caCrtFile"></param>
         /// <param name="caKeyFile"></param>
         /// <param name="subject"></param>
-        public static void CreateCACrtFile(int expireDays, string caCrtFile, string caKeyFile, string subject)
+        public void CreateCACrtFile(int expireDays, string caCrtFile, string caKeyFile, string subject)
         {
             Run(string.Format(
                 "req -new -x509 -sha256 -config \"{0}\" -days {1} -out \"{2}\" -key \"{3}\" -subj \"{4}\"",
-                Item.OpenSSLPath.Cnf,
+                _opensslPath.Cnf,
                 expireDays,
                 caCrtFile,
                 caKeyFile,
@@ -124,11 +140,11 @@ namespace CertTool.OpenSSL
         /// <param name="csrFile"></param>
         /// <param name="keyFIle"></param>
         /// <param name="subject"></param>
-        public static void CreateCSRFile(string csrFile, string keyFile, string subject)
+        public void CreateCSRFile(string csrFile, string keyFile, string subject)
         {
             Run(string.Format(
                 "req -new -sha256 -config \"{0}\" -out \"{1}\" -key \"{2}\" -subj \"{3}\"",
-                Item.OpenSSLPath.Cnf,
+                _opensslPath.Cnf,
                 csrFile,
                 keyFile,
                 subject
@@ -143,18 +159,18 @@ namespace CertTool.OpenSSL
         /// <param name="caKeyFile"></param>
         /// <param name="csrFile"></param>
         /// <param name="crtFile"></param>
-        public static void SignCrtFile(int expireDays, string caCrtFile, string caKeyFile, string csrFile, string crtFile)
+        public void SignCrtFile(int expireDays, string caCrtFile, string caKeyFile, string csrFile, string crtFile)
         {
             //  空のデータベースファイル「index.txt」を作成
-            if (!File.Exists(Item.OpenSSLPath.Db))
+            if (!File.Exists(_opensslPath.Db))
             {
-                File.CreateText(Item.OpenSSLPath.Db);
+                File.CreateText(_opensslPath.Db);
             }
 
             //  シリアルファイルを作成し、00 を記述。
-            if (!File.Exists(Item.OpenSSLPath.Serial))
+            if (!File.Exists(_opensslPath.Serial))
             {
-                using (StreamWriter sw = new StreamWriter(Item.OpenSSLPath.Serial, false, new UTF8Encoding(false)))
+                using (StreamWriter sw = new StreamWriter(_opensslPath.Serial, false, new UTF8Encoding(false)))
                 {
                     sw.WriteLine("00");
                 }
@@ -162,13 +178,13 @@ namespace CertTool.OpenSSL
 
             Run(string.Format(
                 "ca -config \"{0}\" -days {1} -cert \"{2}\" -keyfile \"{3}\" -in \"{4}\" -out \"{5}\" -outdir \"{6}\" -batch",
-                Item.OpenSSLPath.Cnf,
+                _opensslPath.Cnf,
                 expireDays,
                 caCrtFile,
                 caKeyFile,
                 csrFile,
                 crtFile,
-                Item.OpenSSLPath.Dir
+                _opensslPath.Dir
                 ));
         }
 
@@ -179,7 +195,7 @@ namespace CertTool.OpenSSL
         /// <param name="isCsr"></param>
         /// <param name="isCrt"></param>
         /// <param name="isKey"></param>
-        public static string ConvertToText(string sourcePath, bool isCsr, bool isCrt, bool isKey)
+        public string ConvertToText(string sourcePath, bool isCsr, bool isCrt, bool isKey)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -205,7 +221,7 @@ namespace CertTool.OpenSSL
                 Run(string.Format(
                     "req -text -noout -in \"{0}\" -config \"{1}\"",
                     sourcePath,
-                    Item.OpenSSLPath.Cnf
+                    _opensslPath.Cnf
                     ), sb);
             }
             if (isCrt)
@@ -232,14 +248,14 @@ namespace CertTool.OpenSSL
         /// <param name="crtFile"></param>
         /// <param name="caCrtFile"></param>
         /// <param name="caKeyFile"></param>
-        public static void RevokeCertificate(string crtFile, string caCrtFile, string caKeyFile)
+        public void RevokeCertificate(string crtFile, string caCrtFile, string caKeyFile)
         {
             Run(string.Format(
                 "ca -revoke \"{0}\" -cert \"{1}\" -keyfile \"{2}\" -config \"{3}\"",
                 crtFile,
                 caCrtFile,
                 caKeyFile,
-                Item.OpenSSLPath.Cnf
+                _opensslPath.Cnf
                 ));
         }
     }

@@ -67,6 +67,7 @@
     <Compile Include="OpenSSL\OpensslCommand.cs" />
     <Compile Include="OpenSSL\OpensslConfig.cs" />
     <Compile Include="OpenSSL\OpensslConfigBase.cs" />
+    <Compile Include="OpenSSL\OpensslFunction.cs" />
     <Compile Include="OpenSSL\OpensslPath.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

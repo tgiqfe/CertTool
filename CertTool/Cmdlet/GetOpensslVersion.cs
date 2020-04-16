@@ -14,17 +14,22 @@ namespace CertTool.Cmdlet
     {
         protected override void BeginProcessing()
         {
+            /*
             Item.OpenSSLPath = new OpensslPath(Item.TOOLS_DIRECTORY);
             Function.ExpandEmbeddedResource(Item.OpenSSLPath.Base);
             if (!Directory.Exists(Item.OpenSSLPath.Dir))
             {
                 Function.ExtractZipFile(Item.OpenSSLPath.Zip, Item.OpenSSLPath.Dir);
             }
+            */
         }
 
         protected override void ProcessRecord()
         {
-            OpensslCommand.GetVersion();
+            OpensslPath opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY);
+            OpensslCommand command = new OpensslCommand(opensslPath);
+            command.GetVersion();
+            //OpensslCommand.GetVersion();
         }
     }
 }

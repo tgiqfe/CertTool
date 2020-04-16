@@ -100,7 +100,7 @@ namespace CertTool.OpenSSL
         {
             get
             {
-                if(_Rnd == null)
+                if (_Rnd == null)
                 {
                     if (!string.IsNullOrEmpty(_Base))
                     {
@@ -114,7 +114,7 @@ namespace CertTool.OpenSSL
         {
             get
             {
-                if(_Db == null)
+                if (_Db == null)
                 {
                     if (!string.IsNullOrEmpty(_Base))
                     {
@@ -128,7 +128,7 @@ namespace CertTool.OpenSSL
         {
             get
             {
-                if(_Serial == null)
+                if (_Serial == null)
                 {
                     if (!string.IsNullOrEmpty(_Base))
                     {

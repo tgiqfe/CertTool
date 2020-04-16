@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace CertTool.OpenSSL
 {
-    public class OpensslConfig
+    class OpensslConfig
     {
         public class Section_Default : OpensslConfigBase
         {
@@ -139,8 +139,8 @@ namespace CertTool.OpenSSL
                 get
                 {
                     return (basicConstraints == null && keyUsage == null && subjectAltName == null) ?
-                        null :
-                        "[ v3_req ]";
+                        null : base.Name;
+                    //null : "[ v3_req ]";
                 }
             }
             public string basicConstraints { get; set; }
@@ -155,7 +155,8 @@ namespace CertTool.OpenSSL
                 {
                     return (DNS_altnames == null || DNS_altnames.Count == 0) &&
                            (IP_altnames == null || IP_altnames.Count == 0) ?
-                        null : "[ alt_names ]";
+                        null : base.Name;
+                    //null : "[ alt_names ]";
                 }
             }
 

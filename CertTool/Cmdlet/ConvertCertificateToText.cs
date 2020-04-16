@@ -29,17 +29,29 @@ namespace CertTool.Cmdlet
             _currentDirectory = Environment.CurrentDirectory;
             Environment.CurrentDirectory = this.SessionState.Path.CurrentFileSystemLocation.Path;
 
+            /*
             Item.OpenSSLPath = new OpensslPath(Item.TOOLS_DIRECTORY);
             Function.ExpandEmbeddedResource(Item.OpenSSLPath.Base);
             if (!Directory.Exists(Item.OpenSSLPath.Dir))
             {
                 Function.ExtractZipFile(Item.OpenSSLPath.Zip, Item.OpenSSLPath.Dir);
             }
+            */
         }
 
         protected override void ProcessRecord()
         {
-            string text = OpensslCommand.ConvertToText(SourcePath, Csr, Crt, Key);
+            OpensslPath opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY);
+            OpensslCommand command = new OpensslCommand(opensslPath);
+            OpensslConfig config = new OpensslConfig();
+            using (StreamWriter sw = new StreamWriter(opensslPath.Cnf, false, new UTF8Encoding(false)))
+            {
+                sw.Write(config.GetIni());
+            }
+            string text = command.ConvertToText(SourcePath, Csr, Crt, Key);
+
+            //string text = OpensslCommand.ConvertToText(SourcePath, Csr, Crt, Key);
+
             WriteObject(text);
         }
 

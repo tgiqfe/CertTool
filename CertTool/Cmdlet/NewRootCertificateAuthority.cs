@@ -32,16 +32,21 @@ namespace CertTool.Cmdlet
             _currentDirectory = Environment.CurrentDirectory;
             Environment.CurrentDirectory = this.SessionState.Path.CurrentFileSystemLocation.Path;
 
+            /*
             Item.OpenSSLPath = new OpensslPath(Item.TOOLS_DIRECTORY);
             Function.ExpandEmbeddedResource(Item.OpenSSLPath.Base);
             if (!Directory.Exists(Item.OpenSSLPath.Dir))
             {
                 Function.ExtractZipFile(Item.OpenSSLPath.Zip, Item.OpenSSLPath.Dir);
             }
+            */
         }
 
         protected override void ProcessRecord()
         {
+            OpensslFunction.CreateRootCA(CACrtFile, CAKeyFile, Subject, ExpireDays, RsaBits);
+
+            /*
             OpensslConfig config = new OpensslConfig();
 
             config.Default.RANDFILE = Item.OpenSSLPath.Rnd.Replace("\\", "/");
@@ -59,6 +64,8 @@ namespace CertTool.Cmdlet
 
             //  証明書ファイルを作成
             OpensslCommand.CreateCACrtFile(ExpireDays, CACrtFile, CAKeyFile, Subject);
+            */
+
         }
 
         protected override void EndProcessing()

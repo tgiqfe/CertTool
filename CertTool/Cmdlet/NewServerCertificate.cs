@@ -32,16 +32,21 @@ namespace CertTool.Cmdlet
             _currentDirectory = Environment.CurrentDirectory;
             Environment.CurrentDirectory = this.SessionState.Path.CurrentFileSystemLocation.Path;
 
+            /*
             Item.OpenSSLPath = new OpensslPath(Item.TOOLS_DIRECTORY);
             Function.ExpandEmbeddedResource(Item.OpenSSLPath.Base);
             if (!Directory.Exists(Item.OpenSSLPath.Dir))
             {
                 Function.ExtractZipFile(Item.OpenSSLPath.Zip, Item.OpenSSLPath.Dir);
             }
+            */
         }
 
         protected override void ProcessRecord()
         {
+            OpensslFunction.SignCertificate(CACrtFile, CAKeyFile, CsrFile, CrtFile, ExpireDays);
+
+            /*
             OpensslConfig config = new OpensslConfig();
 
             config.Default.RANDFILE = Item.OpenSSLPath.Rnd.Replace("\\", "/");
@@ -95,6 +100,7 @@ namespace CertTool.Cmdlet
 
             //  CSRに署名して証明書を発行
             OpensslCommand.SignCrtFile(ExpireDays, CACrtFile, CAKeyFile, CsrFile, CrtFile);
+            */
         }
 
         protected override void EndProcessing()
