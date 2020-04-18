@@ -243,6 +243,32 @@ namespace CertTool.OpenSSL
         }
 
         /// <summary>
+        /// サーバー証明書 + 中間証明書 + ルート証明書を結合
+        /// </summary>
+        /// <param name="serverCert"></param>
+        /// <param name="chainCert"></param>
+        /// <param name="rootCert"></param>
+        public string JoinCertificates(string serverCert, string chainCert, string rootCert)
+        {
+            StringBuilder sb = new StringBuilder();
+            Action<string> AppendingCert = (file) =>
+            {
+                if (File.Exists(file))
+                {
+                    using (StreamReader sr = new StreamReader(file, Encoding.UTF8))
+                    {
+                        sb.Append(sr.ReadToEnd());
+                    }
+                }
+            };
+            AppendingCert(serverCert);
+            AppendingCert(chainCert);
+            AppendingCert(rootCert);
+
+            return sb.ToString();
+        }
+
+        /// <summary>
         /// 対象の証明書ファイルの情報を破棄/無効化
         /// </summary>
         /// <param name="crtFile"></param>

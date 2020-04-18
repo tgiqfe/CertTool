@@ -9,10 +9,17 @@ using CertTool.OpenSSL;
 
 namespace CertTool.Cmdlet
 {
-    [Cmdlet(VerbsData.Convert, "CertificateToText")]
-    public class ConvertCertificateToText : PSCmdlet
+    [Cmdlet(VerbsData.Convert, "CertificateFile")]
+    public class ConvertCertificateFile : PSCmdlet
     {
-        [Parameter(Mandatory = true, Position = 0), Alias("Path")]
+        const string MODE_ToText = "ToText";
+        const string MODE_ToNginxCert = "ToNginxCert";
+
+        [Parameter, ValidateSet(MODE_ToText, MODE_ToNginxCert)]
+        public string Mode { get; set; } = MODE_ToText;
+
+        //  ToText用のパラメータ
+        [Parameter(Position = 0), Alias("Path")]
         public string SourcePath { get; set; }
         [Parameter]
         public SwitchParameter Csr { get; set; }
@@ -20,6 +27,17 @@ namespace CertTool.Cmdlet
         public SwitchParameter Crt { get; set; }
         [Parameter]
         public SwitchParameter Key { get; set; }
+
+        //  ToNginxCert用のパラメータ
+        [Parameter]
+        public string RootCert { get; set; }
+        [Parameter]
+        public string ChainCert { get; set; }
+        [Parameter]
+        public string ServerCert { get; set; }
+        [Parameter]
+        public string Output { get; set; }
+
         [Parameter]
         public SwitchParameter SaveConfig { get; set; }
 
@@ -41,9 +59,28 @@ namespace CertTool.Cmdlet
             {
                 sw.Write(config.GetIni());
             }
-            string text = command.ConvertToText(SourcePath, Csr, Crt, Key);
 
-            WriteObject(text);
+            switch (Mode)
+            {
+                case MODE_ToText:
+                    string text = command.ConvertToText(SourcePath, Csr, Crt, Key);
+                    WriteObject(text);
+                    break;
+                case MODE_ToNginxCert:
+                    string joinedCert = command.JoinCertificates(ServerCert, ChainCert, RootCert);
+                    if (string.IsNullOrEmpty(Output))
+                    {
+                        WriteObject(joinedCert);
+                    }
+                    else
+                    {
+                        using(StreamWriter sw = new StreamWriter(Output, false, new UTF8Encoding(false)))
+                        {
+                            sw.Write(joinedCert);
+                        }
+                    }
+                    break;
+            }
 
             if (SaveConfig) { OpensslFunction.BackupConf(); }
         }
