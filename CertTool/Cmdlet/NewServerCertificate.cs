@@ -23,7 +23,9 @@ namespace CertTool.Cmdlet
         public string CrtFile { get; set; } = "server.crt";
         [Parameter]
         public int ExpireDays { get; set; } = 365;
-        
+        [Parameter]
+        public SwitchParameter SaveConfig { get; set; }
+
         private string _currentDirectory = null;
 
         protected override void BeginProcessing()
@@ -36,6 +38,8 @@ namespace CertTool.Cmdlet
         protected override void ProcessRecord()
         {
             OpensslFunction.SignCertificate(CACrtFile, CAKeyFile, CsrFile, CrtFile, ExpireDays);
+
+            if (SaveConfig) { OpensslFunction.BackupConf(); }
         }
 
         protected override void EndProcessing()

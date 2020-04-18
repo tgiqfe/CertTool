@@ -24,6 +24,8 @@ namespace CertTool.Cmdlet
         public string[] AlternateNames { get; set; }
         [Parameter]
         public int RsaBits { get; set; } = 4096;
+        [Parameter]
+        public SwitchParameter SaveConfig { get; set; }
 
         private string _currentDirectory = null;
 
@@ -37,6 +39,8 @@ namespace CertTool.Cmdlet
         protected override void ProcessRecord()
         {
             OpensslFunction.CreateCSR(CsrFile, KeyFile, Subject, AlternateNames, RsaBits);
+
+            if (SaveConfig) { OpensslFunction.BackupConf(); }
         }
 
         protected override void EndProcessing()

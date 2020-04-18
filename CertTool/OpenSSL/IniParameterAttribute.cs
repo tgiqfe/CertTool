@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace CertTool.OpenSSL
 {
-    class IniParameterNameAttribute : Attribute
+    class IniParameterAttribute : Attribute
     {
         public string AltName { get; set; }
         public bool IsCount { get; set; }
 
-        public IniParameterNameAttribute() { }
-        public IniParameterNameAttribute(string altName)
+        public IniParameterAttribute() { }
+        public IniParameterAttribute(string altName)
         {
             this.AltName = altName;
             this.IsCount = altName.Contains("*");

@@ -62,7 +62,7 @@
     <Compile Include="Cmdlet\NewRootCertificateAuthority.cs" />
     <Compile Include="Cmdlet\TestProcess.cs" />
     <Compile Include="Function.cs" />
-    <Compile Include="OpenSSL\IniParameterNameAttribute.cs" />
+    <Compile Include="OpenSSL\IniParameterAttribute.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="OpenSSL\OpensslCommand.cs" />
     <Compile Include="OpenSSL\OpensslConfig.cs" />

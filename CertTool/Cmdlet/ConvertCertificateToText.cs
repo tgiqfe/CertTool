@@ -20,6 +20,8 @@ namespace CertTool.Cmdlet
         public SwitchParameter Crt { get; set; }
         [Parameter]
         public SwitchParameter Key { get; set; }
+        [Parameter]
+        public SwitchParameter SaveConfig { get; set; }
 
         private string _currentDirectory = null;
 
@@ -42,6 +44,8 @@ namespace CertTool.Cmdlet
             string text = command.ConvertToText(SourcePath, Csr, Crt, Key);
 
             WriteObject(text);
+
+            if (SaveConfig) { OpensslFunction.BackupConf(); }
         }
 
         protected override void EndProcessing()

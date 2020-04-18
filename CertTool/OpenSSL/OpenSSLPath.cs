@@ -18,6 +18,7 @@ namespace CertTool.OpenSSL
         private string _Rnd = null;
         private string _Db = null;
         private string _Serial = null;
+        private string _BkDir = null;
 
         public string Base { get { return this._Base; } }
         public string Zip
@@ -136,6 +137,24 @@ namespace CertTool.OpenSSL
                     }
                 }
                 return this._Serial;
+            }
+        }
+        public string BkDir
+        {
+            get
+            {
+                if (_BkDir == null)
+                {
+                    if (!string.IsNullOrEmpty(_Base))
+                    {
+                        this._BkDir = Function.RelatedToAbsolutePath(_Base, "..\\bk");
+                    }
+                    if (!Directory.Exists(_BkDir))
+                    {
+                        Directory.CreateDirectory(_BkDir);
+                    }
+                }
+                return this._BkDir;
             }
         }
 

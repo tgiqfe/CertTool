@@ -199,5 +199,19 @@ namespace CertTool.OpenSSL
             //  証明書を破棄
             command.RevokeCertificate(crtFile, caCrtFile, caKeyFile);
         }
+
+        /// <summary>
+        /// 設定ファイル「openssl.cnf」のバックアップ
+        /// </summary>
+        public static void BackupConf()
+        {
+            OpensslPath opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY);
+            File.Copy(
+                opensslPath.Cnf,
+                Path.Combine(
+                    opensslPath.BkDir,
+                    Path.GetFileNameWithoutExtension(opensslPath.Cnf) + "_" + 
+                        DateTime.Now.ToString("yyyyMMddHHmmss") + Path.GetExtension(opensslPath.Cnf)), true);
+        }
     }
 }

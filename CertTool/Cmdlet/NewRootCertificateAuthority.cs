@@ -23,6 +23,8 @@ namespace CertTool.Cmdlet
         public int ExpireDays { get; set; } = 365;
         [Parameter]
         public int RsaBits { get; set; } = 4096;
+        [Parameter]
+        public SwitchParameter SaveConfig { get; set; }
 
         private string _currentDirectory = null;
 
@@ -36,6 +38,8 @@ namespace CertTool.Cmdlet
         protected override void ProcessRecord()
         {
             OpensslFunction.CreateRootCA(CACrtFile, CAKeyFile, Subject, ExpireDays, RsaBits);
+
+            if (SaveConfig) { OpensslFunction.BackupConf(); }
         }
 
         protected override void EndProcessing()

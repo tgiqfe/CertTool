@@ -90,13 +90,13 @@ namespace CertTool.OpenSSL
             public string stateOrProvinceName { get; set; } = "State or Province Name(full name)";
             public string stateOrProvinceName_default { get; set; } = "Some-State";
             public string localityName { get; set; } = "Locality Name (eg, city)";
-            [IniParameterName("0.organizationName")]
+            [IniParameter("0.organizationName")]
             public string _0_organizationName { get; set; } = "Organization Name (eg, company)";
-            [IniParameterName("0.organizationName_default")]
+            [IniParameter("0.organizationName_default")]
             public string _0_organizationName_default { get; set; } = "Internet Widgits Pty Ltd";
-            [IniParameterName("1.organizationName")]
+            [IniParameter("1.organizationName")]
             public string _1_organizationName { get; set; }
-            [IniParameterName("1.organizationName_default")]
+            [IniParameter("1.organizationName_default")]
             public string _1_organizationName_default { get; set; }
             public string organizationalUnitName { get; set; } = "Organizational Unit Name (eg, section)";
             public string organizationalUnitName_default { get; set; }
@@ -104,7 +104,7 @@ namespace CertTool.OpenSSL
             public int commonName_max { get; set; } = 64;
             public string emailAddress { get; set; } = "Email Address";
             public int emailAddress_max { get; set; } = 64;
-            [IniParameterName("SET-ex3")]
+            [IniParameter("SET-ex3")]
             public string SET_ex3 { get; set; }
         }
         public class Section_req_attributes : OpensslConfigBase
@@ -140,7 +140,6 @@ namespace CertTool.OpenSSL
                 {
                     return (basicConstraints == null && keyUsage == null && subjectAltName == null) ?
                         null : base.Name;
-                    //null : "[ v3_req ]";
                 }
             }
             public string basicConstraints { get; set; }
@@ -156,13 +155,12 @@ namespace CertTool.OpenSSL
                     return (DNS_altnames == null || DNS_altnames.Count == 0) &&
                            (IP_altnames == null || IP_altnames.Count == 0) ?
                         null : base.Name;
-                    //null : "[ alt_names ]";
                 }
             }
 
-            [IniParameterName("DNS.*")]
+            [IniParameter("DNS.*")]
             public List<string> DNS_altnames { get; set; }
-            [IniParameterName("IP.*")]
+            [IniParameter("IP.*")]
             public List<string> IP_altnames { get; set; }
         }
         public class Section_v3_ca : OpensslConfigBase
@@ -264,8 +262,8 @@ namespace CertTool.OpenSSL
                     object paramValue = pii.GetValue(configBase);
                     if (paramValue != null)
                     {
-                        IniParameterNameAttribute paramNameAttr =
-                            Attribute.GetCustomAttribute(pii, typeof(IniParameterNameAttribute)) as IniParameterNameAttribute;
+                        IniParameterAttribute paramNameAttr =
+                            Attribute.GetCustomAttribute(pii, typeof(IniParameterAttribute)) as IniParameterAttribute;
                         if (paramNameAttr == null)
                         {
                             //  IniParameterName属性無しのプロパティ

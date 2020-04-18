@@ -19,6 +19,8 @@ namespace CertTool.Cmdlet
         public string CACrtFile { get; set; } = "ca.crt";
         [Parameter(Position = 2)]
         public string CAKeyFile { get; set; } = "ca.key";
+        [Parameter]
+        public SwitchParameter SaveConfig { get; set; }
 
         private string _currentDirectory = null;
 
@@ -32,6 +34,8 @@ namespace CertTool.Cmdlet
         protected override void ProcessRecord()
         {
             OpensslFunction.RevokeCertificate(CrtFile, CACrtFile, CAKeyFile);
+
+            if (SaveConfig) { OpensslFunction.BackupConf(); }
         }
 
         protected override void EndProcessing()
