@@ -14,9 +14,25 @@ namespace CertTool.Cmdlet
     {
         protected override void ProcessRecord()
         {
+            string version = OpensslFunction.GetVersion();
+            using (StringReader sr = new StringReader(version))
+            {
+                string readLine = "";
+                while ((readLine = sr.ReadLine()) != null)
+                {
+                    if (!string.IsNullOrEmpty(readLine))
+                    {
+                        WriteObject(readLine);
+                    }
+                }
+            }
+            //WriteObject(version);
+
+            /*
             OpensslPath opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY);
             OpensslCommand command = new OpensslCommand(opensslPath);
             command.GetVersion();
+            */
         }
     }
 }

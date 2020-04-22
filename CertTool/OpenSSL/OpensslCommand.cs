@@ -79,9 +79,12 @@ namespace CertTool.OpenSSL
         /// <summary>
         /// Opensslのバージョンを表示
         /// </summary>
-        public void GetVersion()
+        public string GetVersion()
         {
-            Run("version");
+            StringBuilder sb = new StringBuilder();
+            Run("version", sb);
+
+            return sb.ToString();
         }
 
         /// <summary>

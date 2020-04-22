@@ -11,6 +11,17 @@ namespace CertTool.OpenSSL
     public class OpensslFunction
     {
         /// <summary>
+        /// Opensslのバージョンを取得して返す
+        /// </summary>
+        /// <returns></returns>
+        public static string GetVersion()
+        {
+            OpensslPath opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY);
+            OpensslCommand command = new OpensslCommand(opensslPath);
+            return command.GetVersion();
+        }
+
+        /// <summary>
         /// ルートCA用証明書/鍵ファイルを作成
         /// </summary>
         /// <param name="caCrtFile"></param>
@@ -212,6 +223,27 @@ namespace CertTool.OpenSSL
                     opensslPath.BkDir,
                     Path.GetFileNameWithoutExtension(opensslPath.Cnf) + "_" + 
                         DateTime.Now.ToString("yyyyMMddHHmmss") + Path.GetExtension(opensslPath.Cnf)), true);
+        }
+
+        /// <summary>
+        /// CSR/証明書/鍵ファイルの中身を確認
+        /// </summary>
+        /// <param name="sourcePath"></param>
+        /// <param name="isCsr"></param>
+        /// <param name="isCrt"></param>
+        /// <param name="isKey"></param>
+        /// <returns></returns>
+        public static string ConvertToText(string sourcePath, bool isCsr, bool isCrt, bool isKey)
+        {
+            OpensslPath opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY);
+            OpensslCommand command = new OpensslCommand(opensslPath);
+            OpensslConfig config = new OpensslConfig();
+            using (StreamWriter sw = new StreamWriter(opensslPath.Cnf, false, new UTF8Encoding(false)))
+            {
+                sw.Write(config.GetIni());
+            }
+
+            return command.ConvertToText(sourcePath, isCsr, isCrt, isKey);
         }
     }
 }

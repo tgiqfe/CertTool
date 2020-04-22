@@ -52,6 +52,7 @@ namespace CertTool.Cmdlet
 
         protected override void ProcessRecord()
         {
+            /*
             OpensslPath opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY);
             OpensslCommand command = new OpensslCommand(opensslPath);
             OpensslConfig config = new OpensslConfig();
@@ -59,24 +60,40 @@ namespace CertTool.Cmdlet
             {
                 sw.Write(config.GetIni());
             }
+            */
 
             switch (Mode)
             {
                 case MODE_ToText:
-                    string text = command.ConvertToText(SourcePath, Csr, Crt, Key);
+                    //string text = command.ConvertToText(SourcePath, Csr, Crt, Key);
+                    string text = OpensslFunction.ConvertToText(SourcePath, Csr, Crt, Key);
                     WriteObject(text);
                     break;
                 case MODE_ToNginxCert:
-                    string joinedCert = command.JoinCertificates(ServerCert, ChainCert, RootCert);
+                    StringBuilder joinSB = new StringBuilder();
+                    Action<string> AppendingCert = (file) =>
+                    {
+                        if (File.Exists(file))
+                        {
+                            using (StreamReader sr = new StreamReader(file, Encoding.UTF8))
+                            {
+                                joinSB.Append(sr.ReadToEnd());
+                            }
+                        }
+                    };
+                    AppendingCert(ServerCert);
+                    AppendingCert(ChainCert);
+                    AppendingCert(RootCert);
+
                     if (string.IsNullOrEmpty(Output))
                     {
-                        WriteObject(joinedCert);
+                        WriteObject(joinSB.ToString());
                     }
                     else
                     {
-                        using(StreamWriter sw = new StreamWriter(Output, false, new UTF8Encoding(false)))
+                        using (StreamWriter sw = new StreamWriter(Output, false, new UTF8Encoding(false)))
                         {
-                            sw.Write(joinedCert);
+                            sw.Write(joinSB.ToString());
                         }
                     }
                     break;
