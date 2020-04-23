@@ -10,14 +10,19 @@ namespace CertTool.OpenSSL
 {
     public class OpensslFunction
     {
+        private static OpensslPath opensslPath = null;
+        private static OpensslCommand command = null;
+
         /// <summary>
         /// Opensslのバージョンを取得して返す
         /// </summary>
         /// <returns></returns>
         public static string GetVersion()
         {
-            OpensslPath opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY);
-            OpensslCommand command = new OpensslCommand(opensslPath);
+            //OpensslPath opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY);
+            if (opensslPath == null) { opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY); }
+            //OpensslCommand command = new OpensslCommand(opensslPath);
+            if (command == null) { command = new OpensslCommand(opensslPath); }
             return command.GetVersion();
         }
 
@@ -31,8 +36,11 @@ namespace CertTool.OpenSSL
         /// <param name="rsaBits"></param>
         public static void CreateRootCA(string caCrtFile, string caKeyFile, string subject, int expireDays, int rsaBits)
         {
-            OpensslPath opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY);
-            OpensslCommand command = new OpensslCommand(opensslPath);
+            //OpensslPath opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY);
+            if (opensslPath == null) { opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY); }
+            //OpensslCommand command = new OpensslCommand(opensslPath);
+            if (command == null) { command = new OpensslCommand(opensslPath); }
+
             OpensslConfig config = new OpensslConfig();
 
             if (string.IsNullOrEmpty(caCrtFile)) { caCrtFile = Path.Combine(opensslPath.CertDir, "ca.crt"); }
@@ -64,8 +72,11 @@ namespace CertTool.OpenSSL
         /// <param name="rsaBits"></param>
         public static void CreateCSR(string csrFile, string keyFile, string subject, string[] alternateNames, int rsaBits)
         {
-            OpensslPath opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY);
-            OpensslCommand command = new OpensslCommand(opensslPath);
+            //OpensslPath opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY);
+            if (opensslPath == null) { opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY); }
+            //OpensslCommand command = new OpensslCommand(opensslPath);
+            if (command == null) { command = new OpensslCommand(opensslPath); }
+
             OpensslConfig config = new OpensslConfig();
             config.Default.RANDFILE = opensslPath.Rnd.Replace("\\", "/");
 
@@ -130,8 +141,11 @@ namespace CertTool.OpenSSL
         /// <param name="expireDays"></param>
         public static void SignCertificate(string caCrtFile, string caKeyFile, string csrFile, string crtFile, int expireDays)
         {
-            OpensslPath opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY);
-            OpensslCommand command = new OpensslCommand(opensslPath);
+            //OpensslPath opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY);
+            if (opensslPath == null) { opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY); }
+            //OpensslCommand command = new OpensslCommand(opensslPath);
+            if (command == null) { command = new OpensslCommand(opensslPath); }
+
             OpensslConfig config = new OpensslConfig();
 
             config.Default.RANDFILE = opensslPath.Rnd.Replace("\\", "/");
@@ -199,8 +213,11 @@ namespace CertTool.OpenSSL
         /// <param name="caKeyFile"></param>
         public static void RevokeCertificate(string crtFile, string caCrtFile, string caKeyFile)
         {
-            OpensslPath opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY);
-            OpensslCommand command = new OpensslCommand(opensslPath);
+            //OpensslPath opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY);
+            if (opensslPath == null) { opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY); }
+            //OpensslCommand command = new OpensslCommand(opensslPath);
+            if (command == null) { command = new OpensslCommand(opensslPath); }
+
             OpensslConfig config = new OpensslConfig();
 
             config.Default.RANDFILE = opensslPath.Rnd.Replace("\\", "/");
@@ -230,7 +247,8 @@ namespace CertTool.OpenSSL
         /// </summary>
         public static void BackupConf()
         {
-            OpensslPath opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY);
+            //OpensslPath opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY);
+            if (opensslPath == null) { opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY); }
 
             string bkFile = Path.Combine(
                 opensslPath.BkDir,
@@ -238,7 +256,7 @@ namespace CertTool.OpenSSL
                     DateTime.Now.ToString("yyyyMMddHHmmss") + Path.GetExtension(opensslPath.Cnf));
             File.Copy(opensslPath.Cnf, bkFile, true);
         }
-        
+
         /// <summary>
         /// CSR/証明書/鍵ファイルの中身を確認
         /// </summary>
@@ -249,8 +267,11 @@ namespace CertTool.OpenSSL
         /// <returns></returns>
         public static string ConvertToText(string sourcePath, bool isCsr, bool isCrt, bool isKey)
         {
-            OpensslPath opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY);
-            OpensslCommand command = new OpensslCommand(opensslPath);
+            //OpensslPath opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY);
+            if (opensslPath == null) { opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY); }
+            //OpensslCommand command = new OpensslCommand(opensslPath);
+            if (command == null) { command = new OpensslCommand(opensslPath); }
+
             OpensslConfig config = new OpensslConfig();
             using (StreamWriter sw = new StreamWriter(opensslPath.Cnf, false, new UTF8Encoding(false)))
             {
@@ -267,11 +288,12 @@ namespace CertTool.OpenSSL
         /// <returns></returns>
         public static string[] GetAlternateNamesFromCsr(string csrFile)
         {
+            //OpensslPath opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY);
+            if (opensslPath == null) { opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY); }
+            //OpensslCommand command = new OpensslCommand(opensslPath);
+            if (command == null) { command = new OpensslCommand(opensslPath); }
+
             List<string> altnameList = new List<string>();
-
-            OpensslPath opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY);
-            OpensslCommand command = new OpensslCommand(opensslPath);
-
             string tempCsrText = command.ConvertToText(csrFile, true, false, false);
             using (StringReader sr = new StringReader(tempCsrText))
             {
@@ -283,11 +305,7 @@ namespace CertTool.OpenSSL
                         foreach (string field in sr.ReadLine().Split(','))
                         {
                             string fieldStr = field.Trim();
-                            if (fieldStr.StartsWith("DNS:"))
-                            {
-                                altnameList.Add(fieldStr.Substring(4));
-                            }
-                            else if (fieldStr.StartsWith("IP Address:"))
+                            if (fieldStr.StartsWith("DNS:") || fieldStr.StartsWith("IP Address:"))
                             {
                                 altnameList.Add(fieldStr.Substring(11));
                             }
