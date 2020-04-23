@@ -23,6 +23,7 @@ namespace CertTool.OpenSSL
             if (opensslPath == null) { opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY); }
             //OpensslCommand command = new OpensslCommand(opensslPath);
             if (command == null) { command = new OpensslCommand(opensslPath); }
+
             return command.GetVersion();
         }
 
@@ -42,15 +43,15 @@ namespace CertTool.OpenSSL
             if (command == null) { command = new OpensslCommand(opensslPath); }
 
             OpensslConfig config = new OpensslConfig();
-
-            if (string.IsNullOrEmpty(caCrtFile)) { caCrtFile = Path.Combine(opensslPath.CertDir, "ca.crt"); }
-            if (string.IsNullOrEmpty(caKeyFile)) { caKeyFile = Path.Combine(opensslPath.CertDir, "ca.key"); }
-
             config.Default.RANDFILE = opensslPath.Rnd.Replace("\\", "/");
             using (StreamWriter sw = new StreamWriter(opensslPath.Cnf, false, new UTF8Encoding(false)))
             {
                 sw.Write(config.GetIni());
             }
+
+            //  未指定の場合にデフォルトパスにセット
+            if (string.IsNullOrEmpty(caCrtFile)) { caCrtFile = Path.Combine(opensslPath.CertDir, "ca.crt"); }
+            if (string.IsNullOrEmpty(caKeyFile)) { caKeyFile = Path.Combine(opensslPath.CertDir, "ca.key"); }
 
             //  ランダムファイル「.rnd」作成
             command.CreateRandomFile();
@@ -112,12 +113,13 @@ namespace CertTool.OpenSSL
                     }
                 }
             }
+
             using (StreamWriter sw = new StreamWriter(opensslPath.Cnf, false, new UTF8Encoding(false)))
             {
                 sw.Write(config.GetIni());
             }
 
-            //  CSRと鍵ファイルのパスが指定されていない場合、デフォルトパスにセット
+            //  未指定の場合にデフォルトパスにセット
             if (string.IsNullOrEmpty(csrFile)) { csrFile = Path.Combine(opensslPath.CertDir, "server.csr"); }
             if (string.IsNullOrEmpty(keyFile)) { keyFile = Path.Combine(opensslPath.CertDir, "server.key"); }
 
@@ -147,7 +149,6 @@ namespace CertTool.OpenSSL
             if (command == null) { command = new OpensslCommand(opensslPath); }
 
             OpensslConfig config = new OpensslConfig();
-
             config.Default.RANDFILE = opensslPath.Rnd.Replace("\\", "/");
             config.CA_default.dir = opensslPath.Dir.Replace("\\", "/");
             config.CA_default.database = opensslPath.Db.Replace("\\", "/");
@@ -193,6 +194,7 @@ namespace CertTool.OpenSSL
                 sw.Write(config.GetIni());
             }
 
+            //  未指定の場合にデフォルトパスにセット
             if (string.IsNullOrEmpty(caCrtFile)) { caCrtFile = Path.Combine(opensslPath.CertDir, "ca.crt"); }
             if (string.IsNullOrEmpty(caKeyFile)) { caKeyFile = Path.Combine(opensslPath.CertDir, "ca.key"); }
             if (string.IsNullOrEmpty(csrFile)) { csrFile = Path.Combine(opensslPath.CertDir, "server.csr"); }
@@ -230,7 +232,7 @@ namespace CertTool.OpenSSL
                 sw.Write(config.GetIni());
             }
 
-            //  サーバ証明書、CA証明書、CA鍵ファイルが指定無しの場合、デフォルトのパスにセット
+            //  未指定の場合にデフォルトパスにセット
             if (string.IsNullOrEmpty(crtFile)) { crtFile = Path.Combine(opensslPath.CertDir, "server.crt"); }
             if (string.IsNullOrEmpty(caCrtFile)) { caCrtFile = Path.Combine(opensslPath.CertDir, "ca.crt"); }
             if (string.IsNullOrEmpty(caKeyFile)) { caKeyFile = Path.Combine(opensslPath.CertDir, "ca.key"); }

@@ -92,16 +92,6 @@ namespace CertTool
         }
 
         /// <summary>
-        /// ZIPファイルを解凍
-        /// </summary>
-        /// <param name="zipFile"></param>
-        /// <param name="outputDir"></param>
-        public static void ExtractZipFile(string zipFile, string outputDir)
-        {
-            ZipFile.ExtractToDirectory(zipFile, outputDir);
-        }
-
-        /// <summary>
         /// baseDirからtargetPathを相対パスで辿った結果を絶対パスで返す
         /// targetPathが絶対パスの場合は、targetPathを返す
         /// targetPathがnull/emptyの場合、baseDirを返す
