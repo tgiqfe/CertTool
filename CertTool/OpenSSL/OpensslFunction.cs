@@ -231,14 +231,14 @@ namespace CertTool.OpenSSL
         public static void BackupConf()
         {
             OpensslPath opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY);
-            File.Copy(
-                opensslPath.Cnf,
-                Path.Combine(
-                    opensslPath.BkDir,
-                    Path.GetFileNameWithoutExtension(opensslPath.Cnf) + "_" +
-                        DateTime.Now.ToString("yyyyMMddHHmmss") + Path.GetExtension(opensslPath.Cnf)), true);
-        }
 
+            string bkFile = Path.Combine(
+                opensslPath.BkDir,
+                Path.GetFileNameWithoutExtension(opensslPath.Cnf) + "_" +
+                    DateTime.Now.ToString("yyyyMMddHHmmss") + Path.GetExtension(opensslPath.Cnf));
+            File.Copy(opensslPath.Cnf, bkFile, true);
+        }
+        
         /// <summary>
         /// CSR/証明書/鍵ファイルの中身を確認
         /// </summary>
@@ -258,6 +258,46 @@ namespace CertTool.OpenSSL
             }
 
             return command.ConvertToText(sourcePath, isCsr, isCrt, isKey);
+        }
+
+        /// <summary>
+        /// CSRからサブジェクト代替名を取得
+        /// </summary>
+        /// <param name="csrFile"></param>
+        /// <returns></returns>
+        public static string[] GetAlternateNamesFromCsr(string csrFile)
+        {
+            List<string> altnameList = new List<string>();
+
+            OpensslPath opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY);
+            OpensslCommand command = new OpensslCommand(opensslPath);
+
+            string tempCsrText = command.ConvertToText(csrFile, true, false, false);
+            using (StringReader sr = new StringReader(tempCsrText))
+            {
+                string readLine = "";
+                while ((readLine = sr.ReadLine()) != null)
+                {
+                    if (readLine.Trim().EndsWith("Subject Alternative Name:"))
+                    {
+                        foreach (string field in sr.ReadLine().Split(','))
+                        {
+                            string fieldStr = field.Trim();
+                            if (fieldStr.StartsWith("DNS:"))
+                            {
+                                altnameList.Add(fieldStr.Substring(4));
+                            }
+                            else if (fieldStr.StartsWith("IP Address:"))
+                            {
+                                altnameList.Add(fieldStr.Substring(11));
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+
+            return altnameList.ToArray();
         }
     }
 }

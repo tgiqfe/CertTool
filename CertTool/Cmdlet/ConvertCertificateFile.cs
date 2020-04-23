@@ -52,16 +52,6 @@ namespace CertTool.Cmdlet
 
         protected override void ProcessRecord()
         {
-            /*
-            OpensslPath opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY);
-            OpensslCommand command = new OpensslCommand(opensslPath);
-            OpensslConfig config = new OpensslConfig();
-            using (StreamWriter sw = new StreamWriter(opensslPath.Cnf, false, new UTF8Encoding(false)))
-            {
-                sw.Write(config.GetIni());
-            }
-            */
-
             switch (Mode)
             {
                 case MODE_ToText:

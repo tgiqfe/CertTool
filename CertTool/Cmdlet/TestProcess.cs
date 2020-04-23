@@ -13,7 +13,13 @@ namespace CertTool.Cmdlet
     {
         protected override void ProcessRecord()
         {
+            string[] array = OpensslFunction.GetAlternateNamesFromCsr(@"C:\Users\tq\AppData\Local\Temp\CertTool\db\cert\server.csr");
             
+            foreach(string ar in array)
+            {
+                Console.WriteLine(ar);
+            }
+
 
         }
     }
