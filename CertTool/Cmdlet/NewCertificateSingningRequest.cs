@@ -15,9 +15,9 @@ namespace CertTool.Cmdlet
     public class NewCertificateSingningRequest : PSCmdlet
     {
         [Parameter]
-        public string CsrFile { get; set; } = "server.csr";
+        public string CsrFile { get; set; }
         [Parameter]
-        public string KeyFile { get; set; } = "server.key";
+        public string KeyFile { get; set; }
         [Parameter]
         public string Subject { get; set; }
         [Parameter]

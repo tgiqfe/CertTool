@@ -16,9 +16,9 @@ namespace CertTool.Cmdlet
         [Parameter(Mandatory = true)]
         public string Subject { get; set; }
         [Parameter]
-        public string CACrtFile { get; set; } = "ca.crt";
+        public string CACrtFile { get; set; }
         [Parameter]
-        public string CAKeyFile { get; set; } = "ca.key";
+        public string CAKeyFile { get; set; }
         [Parameter]
         public int ExpireDays { get; set; } = 365;
         [Parameter]

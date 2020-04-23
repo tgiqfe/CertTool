@@ -14,13 +14,13 @@ namespace CertTool.Cmdlet
     public class NewServerCertificate : PSCmdlet
     {
         [Parameter]
-        public string CACrtFile { get; set; } = "ca.crt";
+        public string CACrtFile { get; set; }
         [Parameter]
-        public string CAKeyFile { get; set; } = "ca.key";
+        public string CAKeyFile { get; set; }
         [Parameter]
-        public string CsrFile { get; set; } = "server.csr";
+        public string CsrFile { get; set; }
         [Parameter]
-        public string CrtFile { get; set; } = "server.crt";
+        public string CrtFile { get; set; }
         [Parameter]
         public int ExpireDays { get; set; } = 365;
         [Parameter]

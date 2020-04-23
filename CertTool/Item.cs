@@ -13,7 +13,5 @@ namespace CertTool
             Path.Combine(Environment.ExpandEnvironmentVariables("%TEMP%"), "CertTool");
         public static readonly string TOOLS_DIRECTORY =
             Path.Combine(WORK_DIRECTORY, "Tools");
-
-        public static CertTool.OpenSSL.OpensslPath OpenSSLPath = null;
     }
 }
