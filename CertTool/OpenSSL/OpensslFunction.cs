@@ -295,21 +295,46 @@ namespace CertTool.OpenSSL
             //OpensslCommand command = new OpensslCommand(opensslPath);
             if (command == null) { command = new OpensslCommand(opensslPath); }
 
-            List<string> altnameList = new List<string>();
+            HashSet<string> altnameSets = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
             string tempCsrText = command.ConvertToText(csrFile, true, false, false);
             using (StringReader sr = new StringReader(tempCsrText))
             {
+                string subjectStr = "Subject:";
+                string subjectAltNameStr = "Subject Alternative Name:";
+                string dnsStr = "DNS:";
+                string ipStr = "IP Address:";
+
                 string readLine = "";
                 while ((readLine = sr.ReadLine()) != null)
                 {
-                    if (readLine.Trim().EndsWith("Subject Alternative Name:"))
+                    string tempLine = readLine.Trim();
+
+                    //  CN名を取得
+                    if (tempLine.StartsWith(subjectStr))
+                    {
+                        foreach (string field in tempLine.Substring(subjectStr.Length).Split(','))
+                        {
+                            if (field.Trim().StartsWith("CN"))
+                            {
+                                altnameSets.Add(field.Substring(field.IndexOf("=") + 1).Trim());
+                            }
+                        }
+                    }
+
+                    //  サブジェクト代替名を取得
+                    if (tempLine.EndsWith(subjectAltNameStr))
                     {
                         foreach (string field in sr.ReadLine().Split(','))
                         {
                             string fieldStr = field.Trim();
-                            if (fieldStr.StartsWith("DNS:") || fieldStr.StartsWith("IP Address:"))
+                            if (fieldStr.StartsWith(dnsStr))
                             {
-                                altnameList.Add(fieldStr.Substring(11));
+                                altnameSets.Add(fieldStr.Substring(dnsStr.Length));
+                            }
+                            else if (fieldStr.StartsWith(ipStr))
+                            {
+                                altnameSets.Add(fieldStr.Substring(ipStr.Length));
                             }
                         }
                         break;
@@ -317,7 +342,7 @@ namespace CertTool.OpenSSL
                 }
             }
 
-            return altnameList.ToArray();
+            return altnameSets.ToArray();
         }
     }
 }
