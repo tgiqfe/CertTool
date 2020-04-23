@@ -14,11 +14,11 @@ namespace CertTool.Cmdlet
     public class RevokeServerCertificate : PSCmdlet
     {
         [Parameter(Mandatory = true, Position = 0)]
-        public string CrtFile { get; set; } = "server.crt";
+        public string CrtFile { get; set; }
         [Parameter(Position = 1)]
-        public string CACrtFile { get; set; } = "ca.crt";
+        public string CACrtFile { get; set; }
         [Parameter(Position = 2)]
-        public string CAKeyFile { get; set; } = "ca.key";
+        public string CAKeyFile { get; set; }
         [Parameter]
         public SwitchParameter SaveConfig { get; set; }
 
