@@ -165,9 +165,9 @@ namespace CertTool.OpenSSL
         public void SignCrtFile(int expireDays, string caCrtFile, string caKeyFile, string csrFile, string crtFile)
         {
             //  空のデータベースファイル「index.txt」を作成
-            if (!File.Exists(_opensslPath.Db))
+            if (!File.Exists(_opensslPath.OpensslDB))
             {
-                File.CreateText(_opensslPath.Db);
+                File.CreateText(_opensslPath.OpensslDB);
             }
 
             //  シリアルファイルを作成し、00 を記述。

@@ -16,7 +16,7 @@ namespace CertTool.OpenSSL
         private string _Work = null;
         private string _Cnf = null;
         private string _Rnd = null;
-        private string _Db = null;
+        private string _OpenlslDB = null;
         private string _Serial = null;
         private string _BkDir = null;
         private string _CertDir = null;
@@ -74,7 +74,7 @@ namespace CertTool.OpenSSL
                 {
                     if (!string.IsNullOrEmpty(_Base))
                     {
-                        this._Work = Function.RelatedToAbsolutePath(_Base, "..\\db\\openssl");
+                        this._Work = Function.RelatedToAbsolutePath(_Base, "..\\CA\\openssl");
                     }
                     if (!Directory.Exists(_Work))
                     {
@@ -112,18 +112,18 @@ namespace CertTool.OpenSSL
                 return this._Rnd;
             }
         }
-        public string Db
+        public string OpensslDB
         {
             get
             {
-                if (_Db == null)
+                if (_OpenlslDB == null)
                 {
                     if (!string.IsNullOrEmpty(_Base))
                     {
-                        this._Db = Path.Combine(Work, "index.txt");
+                        this._OpenlslDB = Path.Combine(Work, "index.txt");
                     }
                 }
-                return this._Db;
+                return this._OpenlslDB;
             }
         }
         public string Serial
@@ -166,7 +166,7 @@ namespace CertTool.OpenSSL
                 {
                     if (!string.IsNullOrEmpty(_Base))
                     {
-                        this._CertDir = Function.RelatedToAbsolutePath(_Base, "..\\db\\cert");
+                        this._CertDir = Function.RelatedToAbsolutePath(_Base, "..\\CA\\cert");
                     }
                     if (!Directory.Exists(_CertDir))
                     {
