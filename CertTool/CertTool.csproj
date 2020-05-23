@@ -57,10 +57,11 @@
     <Compile Include="Cmdlet\ConvertCertificateFile.cs" />
     <Compile Include="Cmdlet\GetOpensslVersion.cs" />
     <Compile Include="Cmdlet\NewCertificateSingningRequest.cs" />
+    <Compile Include="Cmdlet\UnegisterServerCertificate.cs" />
+    <Compile Include="Cmdlet\RegisterServerCertificate.cs" />
     <Compile Include="Cmdlet\RevokeServerCertificate.cs" />
     <Compile Include="Cmdlet\NewServerCertificate.cs" />
     <Compile Include="Cmdlet\NewRootCertificateAuthority.cs" />
-    <Compile Include="Cmdlet\TestProcess.cs" />
     <Compile Include="Function.cs" />
     <Compile Include="OpenSSL\IniParameterAttribute.cs" />
     <Compile Include="Item.cs" />

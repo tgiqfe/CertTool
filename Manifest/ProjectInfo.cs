@@ -36,6 +36,7 @@ namespace Manifest
         public string[] ExcludeCmdlet { get; set; } = new string[]{
             "Test.Process.cs"
         };
+        public ExternalPackage[] ExternalPackages { get; set; } = new ExternalPackage[] { };
 
         public ProjectInfo() { }
     }

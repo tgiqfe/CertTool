@@ -120,6 +120,15 @@ namespace Manifest
                 }
             }
 
+            //  外部パッケージをコピー
+            if (info.ExternalPackages != null)
+            {
+                foreach (ExternalPackage exPack in info.ExternalPackages)
+                {
+                    exPack.CopyPackage();
+                }
+            }
+
             //  モジュールフォルダーをZipアーカイブ
             if (Directory.Exists(info.ModuleDir))
             {
