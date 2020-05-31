@@ -28,12 +28,12 @@ namespace CertTool.OpenSSL
         /// <summary>
         /// ルートCA用証明書/鍵ファイルを作成
         /// </summary>
-        /// <param name="caCrtFile"></param>
-        /// <param name="caKeyFile"></param>
+        /// <param name="rootCACrtFile"></param>
+        /// <param name="rootCAKeyFile"></param>
         /// <param name="subject"></param>
         /// <param name="expireDays"></param>
         /// <param name="rsaBits"></param>
-        public static void CreateRootCA(string caCrtFile, string caKeyFile, string subject, int expireDays, int rsaBits)
+        public static void CreateRootCA(string rootCACrtFile, string rootCAKeyFile, string subject, int expireDays, int rsaBits)
         {
             if (opensslPath == null) { opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY); }
             if (command == null) { command = new OpensslCommand(opensslPath); }
@@ -46,17 +46,17 @@ namespace CertTool.OpenSSL
             }
 
             //  未指定の場合にデフォルトパスにセット
-            if (string.IsNullOrEmpty(caCrtFile)) { caCrtFile = Path.Combine(opensslPath.CertDir, "ca.crt"); }
-            if (string.IsNullOrEmpty(caKeyFile)) { caKeyFile = Path.Combine(opensslPath.CertDir, "ca.key"); }
+            if (string.IsNullOrEmpty(rootCACrtFile)) { rootCACrtFile = Path.Combine(opensslPath.CertDir, Item.DEFAULT_ROOTCA_CRT_NAME); }
+            if (string.IsNullOrEmpty(rootCAKeyFile)) { rootCAKeyFile = Path.Combine(opensslPath.CertDir, Item.DEFAULT_ROOTCA_KEY_NAME); }
 
             //  ランダムファイル「.rnd」作成
             command.CreateRandomFile();
 
             //  鍵ファイル作成
-            command.CreateKeyFile(caKeyFile, rsaBits);
+            command.CreateKeyFile(rootCAKeyFile, rsaBits);
 
             //  証明書ファイルを作成
-            command.CreateCACrtFile(expireDays, caCrtFile, caKeyFile, subject);
+            command.CreateCACrtFile(expireDays, rootCACrtFile, rootCAKeyFile, subject);
         }
 
         /// <summary>
@@ -114,8 +114,8 @@ namespace CertTool.OpenSSL
             }
 
             //  未指定の場合にデフォルトパスにセット
-            if (string.IsNullOrEmpty(csrFile)) { csrFile = Path.Combine(opensslPath.CertDir, "server.csr"); }
-            if (string.IsNullOrEmpty(keyFile)) { keyFile = Path.Combine(opensslPath.CertDir, "server.key"); }
+            if (string.IsNullOrEmpty(csrFile)) { csrFile = Path.Combine(opensslPath.CertDir, Item.DEFAULT_SERVER_CSR_NAME); }
+            if (string.IsNullOrEmpty(keyFile)) { keyFile = Path.Combine(opensslPath.CertDir, Item.DEFAULT_SERVER_KEY_NAME); }
 
             //  ランダムファイル「.rnd」作成
             command.CreateRandomFile();
@@ -130,12 +130,12 @@ namespace CertTool.OpenSSL
         /// <summary>
         /// CSRに署名して証明書を発行
         /// </summary>
-        /// <param name="caCrtFile"></param>
-        /// <param name="caKeyFile"></param>
+        /// <param name="rootCACrtFile"></param>
+        /// <param name="rootCAKeyFile"></param>
         /// <param name="csrFile"></param>
         /// <param name="crtFile"></param>
         /// <param name="expireDays"></param>
-        public static void SignCertificate(string caCrtFile, string caKeyFile, string csrFile, string crtFile, int expireDays)
+        public static void SignCertificate(string rootCACrtFile, string rootCAKeyFile, string csrFile, string crtFile, int expireDays)
         {
             if (opensslPath == null) { opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY); }
             if (command == null) { command = new OpensslCommand(opensslPath); }
@@ -187,25 +187,25 @@ namespace CertTool.OpenSSL
             }
 
             //  未指定の場合にデフォルトパスにセット
-            if (string.IsNullOrEmpty(caCrtFile)) { caCrtFile = Path.Combine(opensslPath.CertDir, "ca.crt"); }
-            if (string.IsNullOrEmpty(caKeyFile)) { caKeyFile = Path.Combine(opensslPath.CertDir, "ca.key"); }
-            if (string.IsNullOrEmpty(csrFile)) { csrFile = Path.Combine(opensslPath.CertDir, "server.csr"); }
-            if (string.IsNullOrEmpty(crtFile)) { crtFile = Path.Combine(opensslPath.CertDir, "server.crt"); }
+            if (string.IsNullOrEmpty(rootCACrtFile)) { rootCACrtFile = Path.Combine(opensslPath.CertDir, Item.DEFAULT_ROOTCA_CRT_NAME); }
+            if (string.IsNullOrEmpty(rootCAKeyFile)) { rootCAKeyFile = Path.Combine(opensslPath.CertDir, Item.DEFAULT_ROOTCA_KEY_NAME); }
+            if (string.IsNullOrEmpty(csrFile)) { csrFile = Path.Combine(opensslPath.CertDir, Item.DEFAULT_SERVER_CSR_NAME); }
+            if (string.IsNullOrEmpty(crtFile)) { crtFile = Path.Combine(opensslPath.CertDir, Item.DEFAULT_SERVER_CRT_NAME); }
 
             //  ランダムファイル「.rnd」作成
             command.CreateRandomFile();
 
             //  CSRに署名して証明書を発行
-            command.SignCrtFile(expireDays, caCrtFile, caKeyFile, csrFile, crtFile);
+            command.SignCrtFile(expireDays, rootCACrtFile, rootCAKeyFile, csrFile, crtFile);
         }
 
         /// <summary>
         /// 指定した証明書を破棄
         /// </summary>
         /// <param name="crtFile"></param>
-        /// <param name="caCrtFile"></param>
-        /// <param name="caKeyFile"></param>
-        public static void RevokeCertificate(string crtFile, string caCrtFile, string caKeyFile)
+        /// <param name="rootCACrtFile"></param>
+        /// <param name="rootCAKeyFile"></param>
+        public static void RevokeCertificate(string crtFile, string rootCACrtFile, string rootCAKeyFile)
         {
             if (opensslPath == null) { opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY); }
             if (command == null) { command = new OpensslCommand(opensslPath); }
@@ -223,15 +223,15 @@ namespace CertTool.OpenSSL
             }
 
             //  未指定の場合にデフォルトパスにセット
-            if (string.IsNullOrEmpty(crtFile)) { crtFile = Path.Combine(opensslPath.CertDir, "server.crt"); }
-            if (string.IsNullOrEmpty(caCrtFile)) { caCrtFile = Path.Combine(opensslPath.CertDir, "ca.crt"); }
-            if (string.IsNullOrEmpty(caKeyFile)) { caKeyFile = Path.Combine(opensslPath.CertDir, "ca.key"); }
+            if (string.IsNullOrEmpty(crtFile)) { crtFile = Path.Combine(opensslPath.CertDir, Item.DEFAULT_SERVER_CSR_NAME); }
+            if (string.IsNullOrEmpty(rootCACrtFile)) { rootCACrtFile = Path.Combine(opensslPath.CertDir, Item.DEFAULT_ROOTCA_CRT_NAME); }
+            if (string.IsNullOrEmpty(rootCAKeyFile)) { rootCAKeyFile = Path.Combine(opensslPath.CertDir, Item.DEFAULT_ROOTCA_KEY_NAME); }
 
             //  ランダムファイル「.rnd」作成
             command.CreateRandomFile();
 
             //  証明書を破棄
-            command.RevokeCertificate(crtFile, caCrtFile, caKeyFile);
+            command.RevokeCertificate(crtFile, rootCACrtFile, rootCAKeyFile);
         }
 
         /// <summary>
