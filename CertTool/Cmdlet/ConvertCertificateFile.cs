@@ -12,21 +12,10 @@ namespace CertTool.Cmdlet
     [Cmdlet(VerbsData.Convert, "CertificateFile")]
     public class ConvertCertificateFile : PSCmdlet
     {
-        const string MODE_ToText = "ToText";
         const string MODE_ToNginxCert = "ToNginxCert";
 
-        [Parameter, ValidateSet(MODE_ToText, MODE_ToNginxCert)]
-        public string Mode { get; set; } = MODE_ToText;
-
-        //  ToText用のパラメータ
-        [Parameter(Position = 0), Alias("Path")]
-        public string SourcePath { get; set; }
-        [Parameter]
-        public SwitchParameter Csr { get; set; }
-        [Parameter]
-        public SwitchParameter Crt { get; set; }
-        [Parameter]
-        public SwitchParameter Key { get; set; }
+        [Parameter, ValidateSet(MODE_ToNginxCert)]
+        public string Mode { get; set; } = MODE_ToNginxCert;
 
         //  ToNginxCert用のパラメータ
         [Parameter]
@@ -52,14 +41,27 @@ namespace CertTool.Cmdlet
 
         protected override void ProcessRecord()
         {
+            //  可能であれば、絶対パスだった場合とファイル名だけだった場合の分岐も設定したい
+            //  ⇒Issue済み
+            OpensslPath opensslPath = new OpensslPath(Item.TOOLS_DIRECTORY);
+            if (string.IsNullOrEmpty(RootCert))
+            {
+                RootCert = Path.Combine(opensslPath.CertDir, Item.DEFAULT_ROOTCA_CRT_NAME);
+            }
+            if (string.IsNullOrEmpty(ChainCert))
+            {
+                ChainCert = Path.Combine(opensslPath.CertDir, "chain.crt");
+            }
+            if (string.IsNullOrEmpty(ServerCert))
+            {
+                ServerCert = Path.Combine(opensslPath.CertDir, Item.DEFAULT_SERVER_CRT_NAME);
+            }
+
             switch (Mode)
             {
-                case MODE_ToText:
-                    //string text = command.ConvertToText(SourcePath, Csr, Crt, Key);
-                    string text = OpensslFunction.ConvertToText(SourcePath, Csr, Crt, Key);
-                    WriteObject(text);
-                    break;
                 case MODE_ToNginxCert:
+                    //  ToNginxCert以外のパラメータは未実装
+                    //  (今後追加する必要ができてから実装予定。多分Java(Tomcat)用を作るかも。
                     StringBuilder joinSB = new StringBuilder();
                     Action<string> AppendingCert = (file) =>
                     {

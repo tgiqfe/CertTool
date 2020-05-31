@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cmdlet\ConvertCertificateFile.cs" />
+    <Compile Include="Cmdlet\ShowCertificateFile.cs" />
     <Compile Include="Cmdlet\GetOpensslVersion.cs" />
     <Compile Include="Cmdlet\NewCertificateSingningRequest.cs" />
     <Compile Include="Cmdlet\UnegisterServerCertificate.cs" />
